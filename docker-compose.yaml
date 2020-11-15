@@ -1,0 +1,56 @@
+version: '3'
+services:
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    container_name: es
+    environment:
+      - node.name=es
+      - cluster.name=es-docker-cluster
+      - cluster.initial_master_nodes=es
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9500:9200
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+        - 6379:6379
+    volumes:
+        - ./redis.conf:/redis.conf
+    command: [ "redis-server", "/redis.conf" ]
+  consumer:
+    container_name: consumer
+    build: ./
+    volumes:
+      - ./common.py:/common.py
+      - ./consumer.py:/consumer.py
+      - ./templates:/templates
+    ports:
+      - 5000:5000
+    command: bash -c "python ./consumer.py && tail -f /dev/null"
+    depends_on:
+      - redis
+      - es
+  queue:
+    container_name: queue
+    build: ./
+    volumes:
+        - ./fizz_queue.py:/fizz_queue.py
+        - ./common.py:/common.py
+    command: bash -c "python ./fizz_queue.py && tail -f /dev/null"
+    depends_on:
+      - consumer
+  producer:
+    container_name: producer
+    build: ./
+    volumes:
+        - ./common.py:/common.py
+        - ./producer.py:/producer.py
+    command: bash -c "tail -f /dev/null"
+    depends_on:
+      - queue

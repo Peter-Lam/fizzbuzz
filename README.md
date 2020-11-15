@@ -18,3 +18,25 @@ Please fork this repo (you may opt to share a private repo with us to preserve y
 - Document the process for using your updated repo in README.md so that we can try out your demo ourselves
 
 Please spend minimal effort on graphics and UI, as this is not a test of your UI coding skills. If you use a web framework like Laravel that's totally cool. Just don't stress on frontend stuff.
+
+
+## How to Run Demo
+
+### System Requirements
+- Docker
+- Python 3.6+
+
+## Getting Started
+1. Use one of the following scripts to start up Docker containers with docker-compose and install python library dependencies for the Python notebook:
+    - `setup.bat`
+    - `setup.sh`
+    
+2. The following containers should be running (check with `docker ps -a`)
+    - producer: Contains the producer which sends POST requests to the Consumer
+    - consumer: Contains a RESTful consumer API which receives POST requests, and stores into database
+    - queue: Contains the workers for the Redis queue
+    - redis: Redis Server
+    - es: ElasticSearch server
+3. Open and run the notebook `producer_consumer.ipynb`
+4. For the website, go to
+    - http://localhost:5000/fizzbuzz/
