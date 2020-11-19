@@ -32,7 +32,7 @@ services:
       - ./templates:/templates
     ports:
       - 5000:5000
-    command: bash -c "python ./consumer.py && tail -f /dev/null"
+    command: bash -c "python -u ./consumer.py && tail -f /dev/null"
     depends_on:
       - redis
       - es

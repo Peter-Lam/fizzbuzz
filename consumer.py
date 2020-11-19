@@ -20,12 +20,12 @@ def post_data():
                 print(
                     f"POST request received ({content['msg_no']}, {content['time_sent']})")
                 # Establish connection to ES
-                common.create_index()
                 es = Elasticsearch(
                     ["http://host.docker.internal:9500"], verify_certs=True)
                 while not es.ping():
                     print("Waiting for ES to startup...")
                     sleep(60)
+                common.create_index()
                 # Push data to ES
                 doc = {'msg_no': content['msg_no'], 'time_sent': content['time_sent'], 'time_received': str(
                     datetime.now(timezone('UTC')).isoformat())}

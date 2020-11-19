@@ -36,7 +36,8 @@ def create_request(msg_no, time_sent):
     :return: response status code of the POST request
     :rtype: int
     '''
-    url = 'http://consumer:5000/consumer/api/post_data/'
+    url = 'http://consumer:5000/consumer/api/post_data/' if 'DOCKER' in os.environ else 'http://localhost:5000/consumer/api/post_data/'
+
     response = requests.post(
         url, json={'msg_no': msg_no, 'time_sent': time_sent})
 
